@@ -3,12 +3,14 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/opt/cuda/targets/x86_64-linux/include"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/include",
+                "/usr/local/cuda/include",
+                "/usr/local/cuda/include/cccl"
             ],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/c++",
             "cStandard": "c17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++23",
             "intelliSenseMode": "linux-gcc-x64",
             "compileCommands": [
                 "${workspaceFolder}/build/compile_commands.json"

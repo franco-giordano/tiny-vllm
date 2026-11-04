@@ -5,7 +5,8 @@ project(my_tiny_vllm LANGUAGES CXX CUDA)
 # Export compiler flags and include paths for clangd (used by Zed).
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_STANDARD 17)
 
 find_package(CUDAToolkit REQUIRED)

@@ -1,5 +1,8 @@
 {
     "cmake.automaticReconfigure": false,
     "cmake.configureOnOpen": false,
-    "cmake.configureOnEdit": false
+    "cmake.configureOnEdit": false,
+    "clangd.arguments": [
+        "--query-driver=/usr/bin/c++,/usr/bin/g++"
+    ]
 }

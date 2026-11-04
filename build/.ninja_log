@@ -1,6 +1,0 @@
-# ninja log v7
-2	707	1793811718075287780	CMakeFiles/my_tiny_vllm.dir/src/main.cu.o	1f72f604e12ce577
-665	704	1793812544797331932	my_tiny_vllm	757cf5b7c4083c48
-1	244	1793812717740075333	build.ninja	69ee1576a1e53085
-1	244	1793812717740075333	/home/frank/repos/my-tiny-vllm/build/cmake_install.cmake	69ee1576a1e53085
-1	665	1793812544133331897	CMakeFiles/my_tiny_vllm.dir/src/main.cpp.o	2d07dcde33f3cffe

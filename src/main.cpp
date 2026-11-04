@@ -1,11 +1,21 @@
+#include <cstdint>
+#include <cuda_bf16.h>
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 #include <queue>
 #define JSON_USE_IMPLICIT_CONVERSIONS 0 // this one is useful, but I don't remember why
 #include "json.hpp"
 #include <iostream>
+#include <fstream>
+#include <vector>
 
 using json = nlohmann::json;
+
+
+__global__ void embeddingGatherKernel()
+{
+}
+
 
 int checkGPUStatus()
 {
@@ -32,6 +42,66 @@ int checkGPUStatus()
 }
 
 int main() {
-    std::cout << checkGPUStatus();
+    // checkGPUStatus();
+
+    // Open the text file for reading
+    std::ifstream safetensors_file("models/model.safetensors", std::ios_base::binary);
+    std::ifstream tokenizer_file("models/tokenizer.json", std::ios_base::binary);
+
+    // if (!safetensors_file) {
+    //     std::cerr << "Error opening file for reading.";
+    //     return 1;
+    // }
+
+    uint64_t header_size;
+    safetensors_file.read(reinterpret_cast<char *>(&header_size), 8);
+    std::string header_json(header_size, '\0');
+    safetensors_file.read(header_json.data(), header_size);
+
+    const auto& parsed_json = json::parse(header_json);
+
+    const auto& tensor = parsed_json.at("model.embed_tokens.weight");
+
+    std::string dtype = tensor.at("dtype").get<std::string>();
+    uint64_t offset = tensor.at("data_offsets").at(1).get<uint64_t>();
+
+    std::cout << tensor.dump(2) << '\n';
+
+    // uint16_t table[262668288];
+    // safetensors_file.read(reinterpret_cast<char *>(&table), offset);
+    //
+    static_assert(sizeof(__nv_bfloat16) == 2);
+    std::vector<__nv_bfloat16> table(offset / sizeof(__nv_bfloat16));
+
+    safetensors_file.seekg(8 + header_size);
+
+    if (!safetensors_file.read(
+            reinterpret_cast<char*>(table.data()), offset)) {
+        std::cerr << "Failed to read embedding tensor\n";
+        return 1;
+    }
+
+    std::cout << __bfloat162float(table[0]) << '\n';
+
+    // All tensors are now loaded on CPU
+
+    std::vector<int> input_tokens = {678, 264, 1933, 13};
+
+    constexpr int MAX_PROMPT_LEN = 512; // max input tokens count
+
+    int *gpu_input_tokens;
+
+    cudaMalloc(&gpu_input_tokens, MAX_PROMPT_LEN * sizeof(int));
+    cudaMemcpy(gpu_input_tokens, input_tokens.data(), input_tokens.size() * sizeof(int), cudaMemcpyHostToDevice);
+
+    embeddingGatherKernel();
+
+        // Read each line from the filei
+   // while (std::getline(f, s))
+    //    std::cout << s << std::endl;
+
+    // Close the file
+    safetensors_file.close();
+
     return 0;
 }

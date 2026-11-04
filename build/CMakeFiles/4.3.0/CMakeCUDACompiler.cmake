@@ -63,7 +63,7 @@ set(CMAKE_CUDA_COMPILER_LIBRARY_ROOT "/usr/local/cuda-13.4")
 
 set(CMAKE_CUDA_ARCHITECTURES_ALL "75-real;80-real;86-real;87-real;88-real;89-real;90-real;100-real;103-real;110-real;120-real;121")
 set(CMAKE_CUDA_ARCHITECTURES_ALL_MAJOR "75-real;80-real;90-real;100-real;110-real;120")
-set(CMAKE_CUDA_ARCHITECTURES_NATIVE "89-real")
+set(CMAKE_CUDA_ARCHITECTURES_NATIVE "No CUDA devices found.-real")
 
 set(CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES "/usr/local/cuda-13.4/targets/x86_64-linux/include;/usr/local/cuda-13.4/targets/x86_64-linux/include/cccl")
 

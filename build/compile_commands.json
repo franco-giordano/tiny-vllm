@@ -1,8 +1,8 @@
 [
 {
   "directory": "/home/frank/repos/my-tiny-vllm/build",
-  "command": "/usr/bin/c++ -I/home/frank/repos/my-tiny-vllm/src -I/home/frank/repos/my-tiny-vllm/include -isystem /usr/local/cuda-13.4/targets/x86_64-linux/include -isystem /usr/local/cuda-13.4/targets/x86_64-linux/include/cccl -std=gnu++17 -o CMakeFiles/my_tiny_vllm.dir/src/main.cpp.o -c /home/frank/repos/my-tiny-vllm/src/main.cpp",
+  "command": "/usr/bin/c++  -I/home/frank/repos/my-tiny-vllm/src -I/home/frank/repos/my-tiny-vllm/include -isystem /usr/local/cuda-13.4/targets/x86_64-linux/include -isystem /usr/local/cuda-13.4/targets/x86_64-linux/include/cccl -g -std=gnu++23 -o CMakeFiles/my_tiny_vllm.dir/src/main.cpp.o -c /home/frank/repos/my-tiny-vllm/src/main.cpp",
   "file": "/home/frank/repos/my-tiny-vllm/src/main.cpp",
-  "output": "/home/frank/repos/my-tiny-vllm/build/CMakeFiles/my_tiny_vllm.dir/src/main.cpp.o"
+  "output": "CMakeFiles/my_tiny_vllm.dir/src/main.cpp.o"
 }
 ]
