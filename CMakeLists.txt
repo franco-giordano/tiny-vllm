@@ -11,7 +11,10 @@ set(CMAKE_CUDA_STANDARD 17)
 
 find_package(CUDAToolkit REQUIRED)
 
-add_executable(my_tiny_vllm src/main.cpp)
+add_executable(my_tiny_vllm
+  src/main.cpp
+  src/kernels.cu
+)
 
 target_include_directories(my_tiny_vllm PRIVATE src)
 target_include_directories(my_tiny_vllm PRIVATE include)

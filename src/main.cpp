@@ -2,20 +2,16 @@
 #include <cuda_bf16.h>
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
+#include <driver_types.h>
 #include <queue>
 #define JSON_USE_IMPLICIT_CONVERSIONS 0 // this one is useful, but I don't remember why
 #include "json.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "kernels.h"
 
 using json = nlohmann::json;
-
-
-__global__ void embeddingGatherKernel()
-{
-}
-
 
 int checkGPUStatus()
 {
@@ -42,7 +38,7 @@ int checkGPUStatus()
 }
 
 int main() {
-    // checkGPUStatus();
+    checkGPUStatus();
 
     // Open the text file for reading
     std::ifstream safetensors_file("models/model.safetensors", std::ios_base::binary);
@@ -94,7 +90,37 @@ int main() {
     cudaMalloc(&gpu_input_tokens, MAX_PROMPT_LEN * sizeof(int));
     cudaMemcpy(gpu_input_tokens, input_tokens.data(), input_tokens.size() * sizeof(int), cudaMemcpyHostToDevice);
 
-    embeddingGatherKernel();
+    __nv_bfloat16* input_embeddings;
+    cudaMalloc(&input_embeddings, MAX_PROMPT_LEN * sizeof(__nv_bfloat16) * 2048);
+
+    __nv_bfloat16* table_embeddings_gpu;
+    cudaMalloc(&table_embeddings_gpu, table.size() * sizeof(__nv_bfloat16));
+    cudaMemcpy(table_embeddings_gpu, table.data(), table.size() * sizeof(__nv_bfloat16), cudaMemcpyHostToDevice);
+
+    embeddingGather(gpu_input_tokens, input_embeddings, table_embeddings_gpu, input_tokens.size());
+
+    std::vector<__nv_bfloat16> cpu_input_embeddings(input_tokens.size() * 2048);
+    cudaMemcpy(cpu_input_embeddings.data(), input_embeddings, input_tokens.size() * sizeof(__nv_bfloat16) * 2048, cudaMemcpyDeviceToHost);
+    for (size_t t = 0; t < input_tokens.size(); ++t) {
+        std::cout << "Token " << input_tokens[t] << ": ";
+
+        for (int j = 0; j < 8; ++j) {
+            size_t index = t * 2048 + j;
+            std::cout << __bfloat162float(cpu_input_embeddings[index]) << ' ';
+        }
+
+        std::cout << "... \n";
+
+        // CPU ONLY COMPARISON
+        std::cout << "CPU Token " << input_tokens[t] << ": ";
+
+        for (int j = 0; j < 8; ++j) {
+            size_t index = input_tokens[t] * 2048 + j;
+            std::cout << __bfloat162float(table[index]) << ' ';
+        }
+
+        std::cout << "... \n";
+    }
 
         // Read each line from the filei
    // while (std::getline(f, s))
@@ -102,6 +128,7 @@ int main() {
 
     // Close the file
     safetensors_file.close();
+    // free(cpu_input_embeddings);
 
     return 0;
 }
