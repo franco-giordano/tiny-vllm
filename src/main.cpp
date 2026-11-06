@@ -42,7 +42,7 @@ int main() {
 
     // Open the text file for reading
     std::ifstream safetensors_file("models/model.safetensors", std::ios_base::binary);
-    std::ifstream tokenizer_file("models/tokenizer.json", std::ios_base::binary);
+    // std::ifstream tokenizer_file("models/tokenizer.json", std::ios_base::binary);
 
     // if (!safetensors_file) {
     //     std::cerr << "Error opening file for reading.";
