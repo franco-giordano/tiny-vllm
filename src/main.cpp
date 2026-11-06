@@ -104,7 +104,7 @@ int main() {
     for (size_t t = 0; t < input_tokens.size(); ++t) {
         std::cout << "Token " << input_tokens[t] << ": ";
 
-        for (int j = 0; j < 8; ++j) {
+        for (int j = 1024; j < 1030; ++j) {
             size_t index = t * 2048 + j;
             std::cout << __bfloat162float(cpu_input_embeddings[index]) << ' ';
         }
@@ -114,7 +114,7 @@ int main() {
         // CPU ONLY COMPARISON
         std::cout << "CPU Token " << input_tokens[t] << ": ";
 
-        for (int j = 0; j < 8; ++j) {
+        for (int j = 1024; j < 1030; ++j) {
             size_t index = input_tokens[t] * 2048 + j;
             std::cout << __bfloat162float(table[index]) << ' ';
         }
